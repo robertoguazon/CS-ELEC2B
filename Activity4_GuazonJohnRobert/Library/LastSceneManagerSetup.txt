@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/act4 assets/scenes/Main.unity
+  isLoaded: 1
+  isActive: 1
