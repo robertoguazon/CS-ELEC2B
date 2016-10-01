@@ -3,9 +3,18 @@ using System.Collections;
 
 public class Grid : MonoBehaviour {
 
+    //grid properties
     [SerializeField] private GameObject cell;
     [SerializeField] private float offsetX = 0;
     [SerializeField] private float offsetY = 0;
+
+    //chips
+    [SerializeField]
+    private GameObject redChip;
+    [SerializeField]
+    private GameObject blueChip;
+
+    private bool _playerRed = true; //if false then player blue
 
     private SpriteRenderer _cellSpriteRenderer;
     private float _cellWidth;
@@ -56,4 +65,30 @@ public class Grid : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    public void PlaceChip(GameObject cell)
+    {
+        GameObject newChip;
+        if (_playerRed)
+        {
+            newChip = Instantiate(redChip) as GameObject;
+        } else {
+            newChip = Instantiate(blueChip) as GameObject;
+        }
+
+        newChip.transform.position = new Vector3(cell.transform.position.x,cell.transform.position.y,cell.transform.position.z - 1);
+
+        //change turns
+        ChangeTurn();
+        
+    }
+
+    private void ChangeTurn() {
+        _playerRed = !_playerRed;
+        if (_playerRed) {
+            Debug.Log("Player: Red");
+        } else {
+            Debug.Log("Player: Blue");
+        }
+    }
 }

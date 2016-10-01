@@ -22,4 +22,10 @@ public class Cell : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    void OnMouseDown() {
+        //access the method from parent
+        Grid grid = GetComponentInParent<Grid>();
+        grid.PlaceChip(this.gameObject);
+    }
 }
