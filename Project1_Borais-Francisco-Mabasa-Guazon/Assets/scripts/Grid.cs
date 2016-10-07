@@ -8,14 +8,6 @@ public class Grid : MonoBehaviour {
     [SerializeField] private float offsetX = 0;
     [SerializeField] private float offsetY = 0;
 
-    //chips
-    [SerializeField]
-    private GameObject redChip;
-    [SerializeField]
-    private GameObject blueChip;
-
-    private bool _playerRed = true; //if false then player blue
-
     private SpriteRenderer _cellSpriteRenderer;
     private float _cellWidth;
     private float _cellHeight;
@@ -60,35 +52,13 @@ public class Grid : MonoBehaviour {
         //fix grid position to center
         this.transform.position = new Vector3(this.transform.position.x - _gridWidth / 2 + _cellWidth / 2, - _gridHeight / 2 + _cellHeight / 2);
     }
+
+    public int GetSize() {
+        return rows * cols;
+    }
 	
 	// Update is called once per frame
 	void Update () {
-	
-	}
-
-    public void PlaceChip(GameObject cell)
-    {
-        GameObject newChip;
-        if (_playerRed)
-        {
-            newChip = Instantiate(redChip) as GameObject;
-        } else {
-            newChip = Instantiate(blueChip) as GameObject;
-        }
-
-        newChip.transform.position = new Vector3(cell.transform.position.x,cell.transform.position.y,cell.transform.position.z - 1);
-
-        //change turns
-        ChangeTurn();
         
-    }
-
-    private void ChangeTurn() {
-        _playerRed = !_playerRed;
-        if (_playerRed) {
-            Debug.Log("Player: Red");
-        } else {
-            Debug.Log("Player: Blue");
-        }
-    }
+	}
 }
