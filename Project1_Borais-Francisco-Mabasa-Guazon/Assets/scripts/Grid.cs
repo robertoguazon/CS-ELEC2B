@@ -61,4 +61,25 @@ public class Grid : MonoBehaviour {
 	void Update () {
         
 	}
+
+    public Sprite GetSpriteAt(int row, int col) {
+        GameObject cell = _cells[row, col];
+        if (cell.transform.childCount > 0) {
+            return _cells[row, col].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
+        }
+
+        return null;
+    }
+
+    public int GetRows() {
+        return rows;
+    }               
+    
+    public int GetCols() {
+        return cols;
+    }         
+
+    public GameObject GetCellAt(int row, int col) {
+        return _cells[row, col];
+    }
 }

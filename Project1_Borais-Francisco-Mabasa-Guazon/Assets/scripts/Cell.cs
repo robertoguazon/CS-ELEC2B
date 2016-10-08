@@ -47,14 +47,20 @@ public class Cell : MonoBehaviour {
 
     void OnMouseEnter() {
         transform.localScale = new Vector3(1.3f,1.3f,1.3f);
-        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1);
+        _spriteRenderer.sortingLayerName = "Floating Cell";
+        if (this.transform.childCount > 0){
+            this.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = "Floating Chip";
+        }
 
         _spriteRenderer.color = new Color(highlightColor.r,highlightColor.g,highlightColor.b);
     }
 
     void OnMouseExit() {
         transform.localScale = new Vector3(1f,1f,1f);
-        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 1);
+        _spriteRenderer.sortingLayerName = "Cell";
+        if (this.transform.childCount > 0) {
+            this.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = "Chip";
+        }
 
         _spriteRenderer.color = new Color(blankColor.r, blankColor.g, blankColor.b);
     }

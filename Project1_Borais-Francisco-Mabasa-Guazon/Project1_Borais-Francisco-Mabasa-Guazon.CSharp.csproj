@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Assets\scripts\Audio.cs" />
     <Compile Include="Assets\scripts\Cell.cs" />
+    <Compile Include="Assets\scripts\Checker.cs" />
     <Compile Include="Assets\scripts\GameController.cs" />
     <Compile Include="Assets\scripts\Grid.cs" />
   </ItemGroup>
