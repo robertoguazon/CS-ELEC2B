@@ -45,7 +45,10 @@ public class Grid : MonoBehaviour {
                 GameObject newCell = Instantiate(cell) as GameObject;
                 _cells[row, col] = newCell;
                 newCell.transform.parent = this.transform;
-                newCell.transform.position =  new Vector3(col * _cellWidth + offsetX, row * _cellHeight + offsetY, 0);
+                float x = col * _cellWidth + offsetX;
+                float y = row * _cellHeight + offsetY;
+                newCell.transform.position =  new Vector3(x, y, 0);
+                Debug.Log("x: " + x + ", y: " + y);
             }
         }
 

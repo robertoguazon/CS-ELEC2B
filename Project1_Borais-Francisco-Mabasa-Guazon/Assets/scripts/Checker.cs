@@ -61,9 +61,10 @@ public class Checker : MonoBehaviour {
     }
 
     public bool CheckCell(Grid grid, int row, int col) {
+
         _currentChipSprite = grid.GetSpriteAt(row, col);
         List<Vector3> vertices = new List<Vector3>();
-
+            
         for (int checkerRow = 0; (checkerRow < checkerRows.Length); checkerRow++) {
 
             if ((checkerRow + row) >= grid.GetRows()) return false;
@@ -78,6 +79,7 @@ public class Checker : MonoBehaviour {
                 }
 
                 vertices.Add(grid.GetCellAt(row + checkerRow, col + checkerCol).transform.position);
+
             } 
         }
 
@@ -111,6 +113,14 @@ public class Checker : MonoBehaviour {
         }
 
         return winner;
+    }
+
+    public int GetRedScore() {
+        return _playerRed;
+    }
+
+    public int GetBlueScore() {
+        return _playerBlue;
     }
 
     private void DrawLine(Vector3 start, Vector3 end, Color color)

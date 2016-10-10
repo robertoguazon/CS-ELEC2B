@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
@@ -14,6 +15,24 @@ public class GameController : MonoBehaviour {
     private GameObject rectangleChecker;
     [SerializeField]
     private GameObject triangleChecker;
+    [SerializeField]
+    private GameObject prefabLoading;
+
+    //ui s
+    [SerializeField]
+    private Canvas canvas;
+    [SerializeField]
+    private Image scoreboard;
+    [SerializeField]
+    private Text redRectangleText;
+    [SerializeField]
+    private Text redTriangleText;
+    [SerializeField]
+    private Text blueRectangleText;
+    [SerializeField]
+    private Text blueTriangleText;
+    [SerializeField]
+    private Animator scoreboardAnimator;
 
     private static GameObject _redChip;
     private static GameObject _blueChip;
@@ -24,11 +43,23 @@ public class GameController : MonoBehaviour {
 
     private static bool _playerRed = true; //if false then player blue
 
+    private static GameObject _loading;
+
     private static GameController _gameController;
 
-    //sample
+    //score board
+    private static Canvas _canvas;
+    private static Image _scoreboard;
+    private static Text _redRectangleText;
+    private static Text _redTriangleText;
+    private static Text _blueRectangleText;
+    private static Text _blueTriangleText;
+    private static Animator _scoreboardAnimator;
+
+    //checkers
     private static Checker _rectangleChecker;
     private static Checker _triangleChecker;
+
 
     public void Start() {
         _redChip = prefabRedChip;
@@ -42,6 +73,20 @@ public class GameController : MonoBehaviour {
         //sample
         _rectangleChecker = rectangleChecker.GetComponent<Checker>();
         _triangleChecker = triangleChecker.GetComponent<Checker>();
+
+        _loading = Instantiate(prefabLoading) as GameObject;
+        _loading.SetActive(false);
+        _loading.transform.position = Vector3.zero;
+
+        _canvas = canvas;
+        _scoreboard = scoreboard;
+        _redRectangleText = redRectangleText;
+        _redTriangleText = redTriangleText;
+        _blueRectangleText = blueRectangleText;
+        _blueTriangleText = blueTriangleText;
+
+        _scoreboardAnimator = scoreboardAnimator;
+        _canvas.enabled = false;
     }
 
     public static void PlaceChip(GameObject cell)
@@ -101,22 +146,34 @@ public class GameController : MonoBehaviour {
     }
 
     private static IEnumerator CheckWinner(float seconds) {
+        _canvas.enabled = true;
+        _scoreboardAnimator.SetTrigger("Appear");
 
         //start checking animation
-        //TODO
-
+        _loading.SetActive(true);
         yield return new WaitForSeconds(seconds);
 
-        //stop checking animation
-        //TODO
-
+        //check using checker
         _rectangleChecker.CheckGrid(_grid.GetComponent<Grid>());
-        _triangleChecker.CheckGrid(_grid.GetComponent<Grid>());
 
-        Debug.Log("Finished checking rectangles");
-        Debug.Log("Winner: " + _rectangleChecker.GetWinner());
+        float rectangleRed = _rectangleChecker.GetRedScore();
+        float rectangleBlue = _rectangleChecker.GetBlueScore();
 
-       Debug.Log("Finished checking triangles");
-       Debug.Log("Winner: " + _triangleChecker.GetWinner());
+        //place texts
+        _redRectangleText.text = "" + rectangleRed;
+        _blueRectangleText.text = "" + rectangleBlue;
+
+        //if tie calculate triangle
+        if (rectangleBlue == rectangleRed) {
+            _triangleChecker.CheckGrid(_grid.GetComponent<Grid>());
+            _redTriangleText.text = "" + _triangleChecker.GetRedScore();
+            _blueTriangleText.text = "" + _triangleChecker.GetBlueScore();
+        } else {
+            _redTriangleText.text = "?";
+            _blueTriangleText.text = "?";
+        }
+
+        //stop checking animation
+        _loading.SetActive(false);        
     }
 }
