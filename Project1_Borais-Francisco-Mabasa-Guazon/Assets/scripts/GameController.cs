@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 
@@ -33,6 +34,8 @@ public class GameController : MonoBehaviour {
     private Text blueTriangleText;
     [SerializeField]
     private Animator scoreboardAnimator;
+    [SerializeField]
+    private Animator resetButtonAnimator;
 
     private static GameObject _redChip;
     private static GameObject _blueChip;
@@ -55,6 +58,10 @@ public class GameController : MonoBehaviour {
     private static Text _blueRectangleText;
     private static Text _blueTriangleText;
     private static Animator _scoreboardAnimator;
+
+    //reset button
+    private static Animator _resetButtonAnimator;
+
 
     //checkers
     private static Checker _rectangleChecker;
@@ -86,6 +93,8 @@ public class GameController : MonoBehaviour {
         _blueTriangleText = blueTriangleText;
 
         _scoreboardAnimator = scoreboardAnimator;
+        _resetButtonAnimator = resetButtonAnimator;
+
         _canvas.enabled = false;
     }
 
@@ -148,6 +157,7 @@ public class GameController : MonoBehaviour {
     private static IEnumerator CheckWinner(float seconds) {
         _canvas.enabled = true;
         _scoreboardAnimator.SetTrigger("Appear");
+        _resetButtonAnimator.SetTrigger("Appear");
 
         //start checking animation
         _loading.SetActive(true);
@@ -175,5 +185,9 @@ public class GameController : MonoBehaviour {
 
         //stop checking animation
         _loading.SetActive(false);        
+    }
+
+    public static string GetGameLevel() {
+        return SceneManager.GetActiveScene().name;
     }
 }
