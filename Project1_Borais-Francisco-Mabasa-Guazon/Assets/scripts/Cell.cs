@@ -10,9 +10,12 @@ public class Cell : MonoBehaviour {
     [SerializeField]
     private Color highlightColor;
 
+    public int Row { get; set; }
+    public int Col { get; set; }
+
     private SpriteRenderer _spriteRenderer;
 
-	void Start () {
+    void Start () {
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
         if (blankSprite == null) {

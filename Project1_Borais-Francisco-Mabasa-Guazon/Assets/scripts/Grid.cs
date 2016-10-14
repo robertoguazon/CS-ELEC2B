@@ -22,11 +22,13 @@ public class Grid : MonoBehaviour {
     private float _gridWidth;
     private float _gridHeight;
 
-	// Use this for initialization
-	void Start () {
-        if (cell == null) {
+    void Awake() {
+        if (cell == null)
+        {
             Debug.Log("GameObject cell: null");
-        } else {
+        }
+        else
+        {
             _cellSpriteRenderer = cell.GetComponent<SpriteRenderer>();
             _cellWidth = _cellSpriteRenderer.sprite.bounds.size.x;
             _cellHeight = _cellSpriteRenderer.sprite.bounds.size.y;
@@ -47,13 +49,23 @@ public class Grid : MonoBehaviour {
                 newCell.transform.parent = this.transform;
                 float x = col * _cellWidth + offsetX;
                 float y = row * _cellHeight + offsetY;
-                newCell.transform.position =  new Vector3(x, y, 0);
+                newCell.transform.position = new Vector3(x, y, 0);
                 Debug.Log("x: " + x + ", y: " + y);
+
+                Cell nCell = newCell.GetComponent<Cell>();
+                nCell.Row = row;
+                nCell.Col = col;
+
             }
         }
 
         //fix grid position to center
-        this.transform.position = new Vector3(this.transform.position.x - _gridWidth / 2 + _cellWidth / 2, - _gridHeight / 2 + _cellHeight / 2);
+        this.transform.position = new Vector3(this.transform.position.x - _gridWidth / 2 + _cellWidth / 2, -_gridHeight / 2 + _cellHeight / 2);
+    }
+
+	// Use this for initialization
+	void Start () {
+        
     }
 
     public int GetSize() {
