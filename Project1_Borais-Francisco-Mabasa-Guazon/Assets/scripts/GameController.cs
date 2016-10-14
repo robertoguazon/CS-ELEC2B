@@ -183,7 +183,7 @@ public class GameController : MonoBehaviour {
         _turn++;
 
         if (HasChip(cell)) return; // exit if the cell already has chip
-        if (_turn > _startAdjacentTurn) {
+        if (_turn >= _startAdjacentTurn) {
 
             if (!HasAdjacent(cell,_playerSprite)) return; // check if has adjacent then be able to place chip
         }
