@@ -78,6 +78,7 @@ public class GameController : MonoBehaviour {
     private static int _startAdjacentTurn;
 
     private static List<GameObject> _availableCells;
+    private static List<GameObject> _placedCells;
 
     public static readonly int[,] adjacents = {
         {-1,-1}, { 0,-1}, { 1,-1},
@@ -130,6 +131,8 @@ public class GameController : MonoBehaviour {
                 _availableCells.Add(_gridScript.GetCellAt(row, col));
             }
         }
+
+        _placedCells = new List<GameObject>();
     }
 
     void Awake() {
@@ -166,7 +169,7 @@ public class GameController : MonoBehaviour {
 
         if (row < 0 || col < 0 || row >= _gridScript.GetRows() || col >= _gridScript.GetCols() ) return false;
 
-        Sprite targetSprite = _gridScript.GetSpriteAt(row, col);
+        Sprite targetSprite = _gridScript.GetChipSpriteAt(row, col);
         if (targetSprite != null) {
             if (targetSprite == sprite)
             {
@@ -214,6 +217,9 @@ public class GameController : MonoBehaviour {
 
         //play audio
         Audio.PlayDropChip();
+
+        //add to placed cells
+        _placedCells.Add(cell);
     }
 
     public static bool IsAvailable (Sprite sprite) {
@@ -262,7 +268,7 @@ public class GameController : MonoBehaviour {
         yield return new WaitForSeconds(seconds);
 
         //check using checker
-        _rectangleChecker.CheckGrid(_grid.GetComponent<Grid>());
+        _rectangleChecker.CheckPlacedCells(_gridScript, _placedCells);
 
         float rectangleRed = _rectangleChecker.GetRedScore();
         float rectangleBlue = _rectangleChecker.GetBlueScore();
@@ -273,7 +279,7 @@ public class GameController : MonoBehaviour {
 
         //if tie calculate triangle
         if (rectangleBlue == rectangleRed) {
-            _triangleChecker.CheckGrid(_grid.GetComponent<Grid>());
+            _triangleChecker.CheckPlacedCells(_gridScript, _placedCells);
             _redTriangleText.text = "" + _triangleChecker.GetRedScore();
             _blueTriangleText.text = "" + _triangleChecker.GetBlueScore();
         } else {

@@ -77,7 +77,7 @@ public class Grid : MonoBehaviour {
         
 	}
 
-    public Sprite GetSpriteAt(int row, int col) {
+    public Sprite GetChipSpriteAt(int row, int col) {
         GameObject cell = _cells[row, col];
         if (cell.transform.childCount > 0) {
             return _cells[row, col].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;

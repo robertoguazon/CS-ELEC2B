@@ -68,4 +68,11 @@ public class Cell : MonoBehaviour {
         _spriteRenderer.color = new Color(blankColor.r, blankColor.g, blankColor.b);
     }
 
+    public Sprite GetChipSprite() {
+        return transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
+    }
+
+    public Sprite GetSprite() {
+        return _spriteRenderer.sprite;
+    }
 }

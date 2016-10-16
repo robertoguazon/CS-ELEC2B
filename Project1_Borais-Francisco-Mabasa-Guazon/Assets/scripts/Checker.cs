@@ -35,66 +35,106 @@ public class Checker : MonoBehaviour {
         Array.Reverse(checkerRows);
     }
 
-    public void CheckGrid(Grid grid) {
-        _gridRows = grid.GetRows();
-        _gridCols = grid.GetCols();
+    //more efficient than CheckGrid()
+    public void CheckPlacedCells(Grid grid, List<GameObject> placedCells) {
+        for (int i = 0; i < placedCells.Count; i++) {
+            GameObject cellObject = placedCells[i];
+            Cell cell = cellObject.GetComponent<Cell>();
+            Debug.Log("Checking cell at (row,col): " + cell.Row + "," + cell.Col);
+            Sprite chipSprite = cell.GetChipSprite();
 
-        Debug.Log("grid rows,cols (" + _gridRows + ", " + _gridCols);
+            if (CheckCell(grid,cell)) {
+                if (chipSprite == spriteRedChip) _playerRed++;
+                else if (chipSprite == spriteBlueChip) _playerBlue++;
+            }
+        }
+    }
 
-        for (int row = 0; row < _gridRows; row++) {
-            for (int col = 0; col < _gridCols; col++) {
+    //more efficient
+    public bool CheckCell(Grid grid, Cell cell) {
+        _currentChipSprite = cell.GetChipSprite();
+        List<Vector3> vertices = new List<Vector3>();
 
-                Debug.Log("row, col(" + row + ", " + col + ")");
-                if (CheckCell(grid, row, col)) {
-                    //add points if match
-                    if (grid.GetSpriteAt(row, col) == spriteRedChip) {
-                        _playerRed++;
-                    } else if (grid.GetSpriteAt(row, col) == spriteBlueChip) {
-                        _playerBlue++;
-                    }
+        for (int checkerRow = 0; (checkerRow < checkerRows.Length); checkerRow++)
+        {
+
+            if ((checkerRow + cell.Row) >= grid.GetRows()) return false;
+            for (int checkerCol = 0; (checkerCol < checkerRows[checkerRow]); checkerCol++)
+            {
+
+                if ((checkerCol + cell.Col) >= grid.GetCols()) return false;
+                Debug.Log("checker row,col (: " + checkerRow + ", " + checkerCol + ")");
+
+                Debug.Log("Final(" + (cell.Row + checkerRow) + ", " + (cell.Col + checkerCol) + ")");
+                if (_currentChipSprite != grid.GetChipSpriteAt(checkerRow + cell.Row, checkerCol + cell.Col))
+                {
+                    return false;
                 }
+
+                vertices.Add(grid.GetCellAt(cell.Row + checkerRow, cell.Col + checkerCol).transform.position);
 
             }
         }
 
-        Debug.Log("Finished checking grid");
+        Color color = Color.black;
+
+        if (cell.GetChipSprite() == spriteRedChip)
+        {
+            color = new Color(1f, 0.3f, 0.3f);
+        }
+        else if (cell.GetChipSprite() == spriteBlueChip)
+        {
+            color = new Color(0.3f, 0.3f, 1f);
+        }
+
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            DrawLine(vertices[i], vertices[(i + 1) % vertices.Count], color);
+        }
+
+        return true;
     }
 
-    public bool CheckCell(Grid grid, int row, int col) {
+    public bool CheckCell(Grid grid, int row, int col)
+    {
 
-        _currentChipSprite = grid.GetSpriteAt(row, col);
+        _currentChipSprite = grid.GetChipSpriteAt(row, col);
         List<Vector3> vertices = new List<Vector3>();
-            
-        for (int checkerRow = 0; (checkerRow < checkerRows.Length); checkerRow++) {
+
+        for (int checkerRow = 0; (checkerRow < checkerRows.Length); checkerRow++)
+        {
 
             if ((checkerRow + row) >= grid.GetRows()) return false;
-            for (int checkerCol = 0; (checkerCol < checkerRows[checkerRow]); checkerCol++) {
+            for (int checkerCol = 0; (checkerCol < checkerRows[checkerRow]); checkerCol++)
+            {
 
                 if ((checkerCol + col) >= grid.GetCols()) return false;
                 Debug.Log("checker row,col (: " + checkerRow + ", " + checkerCol + ")");
 
                 Debug.Log("Final(" + (row + checkerRow) + ", " + (col + checkerCol) + ")");
-                if (_currentChipSprite != grid.GetSpriteAt(checkerRow + row, checkerCol + col)) {
+                if (_currentChipSprite != grid.GetChipSpriteAt(checkerRow + row, checkerCol + col))
+                {
                     return false;
                 }
 
                 vertices.Add(grid.GetCellAt(row + checkerRow, col + checkerCol).transform.position);
 
-            } 
+            }
         }
 
         Color color = Color.black;
 
-        if (grid.GetSpriteAt(row, col) == spriteRedChip)
+        if (grid.GetChipSpriteAt(row, col) == spriteRedChip)
         {
-            color = new Color(1f,0.3f,0.3f);
+            color = new Color(1f, 0.3f, 0.3f);
         }
-        else if (grid.GetSpriteAt(row, col) == spriteBlueChip)
+        else if (grid.GetChipSpriteAt(row, col) == spriteBlueChip)
         {
             color = new Color(0.3f, 0.3f, 1f);
         }
 
-        for (int i = 0; i < vertices.Count; i++) {
+        for (int i = 0; i < vertices.Count; i++)
+        {
             DrawLine(vertices[i], vertices[(i + 1) % vertices.Count], color);
         }
 
@@ -135,5 +175,39 @@ public class Checker : MonoBehaviour {
         lr.SetWidth(0.1f, 0.1f);
         lr.SetPosition(0, start);
         lr.SetPosition(1, end);
+    }
+
+    //less efficient than placed cells where only the cells that have been used are checked
+    //but at worse case they are the same
+    public void CheckGrid(Grid grid)
+    {
+        _gridRows = grid.GetRows();
+        _gridCols = grid.GetCols();
+
+        Debug.Log("grid rows,cols (" + _gridRows + ", " + _gridCols);
+
+        for (int row = 0; row < _gridRows; row++)
+        {
+            for (int col = 0; col < _gridCols; col++)
+            {
+
+                Debug.Log("row, col(" + row + ", " + col + ")");
+                if (CheckCell(grid, row, col))
+                {
+                    //add points if match
+                    if (grid.GetChipSpriteAt(row, col) == spriteRedChip)
+                    {
+                        _playerRed++;
+                    }
+                    else if (grid.GetChipSpriteAt(row, col) == spriteBlueChip)
+                    {
+                        _playerBlue++;
+                    }
+                }
+
+            }
+        }
+
+        Debug.Log("Finished checking grid");
     }
 }
