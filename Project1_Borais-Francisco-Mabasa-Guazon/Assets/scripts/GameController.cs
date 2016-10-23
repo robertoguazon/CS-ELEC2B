@@ -120,7 +120,7 @@ public class GameController : MonoBehaviour {
         _blueSprite = _blueChip.GetComponent<SpriteRenderer>().sprite;
         _playerSprite = _redSprite;
 
-        _turn = 0;
+        _turn = 1;
         _startAdjacentTurn = 3;
 
         _availableCells = new List<GameObject>();
@@ -183,13 +183,16 @@ public class GameController : MonoBehaviour {
 
     public static void PlaceChip(GameObject cell)
     {
-        _turn++;
 
         if (HasChip(cell)) return; // exit if the cell already has chip
+        Debug.Log("No chip");
         if (_turn >= _startAdjacentTurn) {
-
+            Debug.Log("Check adjacent");
             if (!HasAdjacent(cell,_playerSprite)) return; // check if has adjacent then be able to place chip
+            Debug.Log("Has adjacent");
         }
+
+        _turn++; //add turn after placing chip
 
         GameObject newChip;
         if (_playerRed)
