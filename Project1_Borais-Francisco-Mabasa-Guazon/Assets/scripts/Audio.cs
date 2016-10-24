@@ -4,14 +4,21 @@ using System.Collections;
 public class Audio : MonoBehaviour {
 
     [SerializeField]
+    private AudioClip backgroundMusic;
+    [SerializeField]
     private AudioClip dropChipSound;
     [SerializeField]
     private AudioClip pressButtonSound;
+    [SerializeField]
 
-    private static AudioSource _audioSource;
-    private static Audio _instance = null;
+    private static AudioSource _soundEffectsSource;
+    private static AudioSource _backgroundMusicSource;
+
+    private static AudioClip _backgroundMusic;
     private static AudioClip _dropChipSound;
     private static AudioClip _pressButtonSound;
+
+    private static Audio _instance = null;
 
     void Awake() {
         if (_instance == null) {
@@ -30,27 +37,40 @@ public class Audio : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
-        _audioSource = GetComponent<AudioSource>();
-        Debug.Log("Audio Source: " + _audioSource);
+        _soundEffectsSource = gameObject.AddComponent<AudioSource>();
+        _backgroundMusicSource = gameObject.AddComponent<AudioSource>();
+        Debug.Log("Audio Source: " + _soundEffectsSource);
 
         _dropChipSound = dropChipSound;
         _pressButtonSound = pressButtonSound;
+        _backgroundMusic = backgroundMusic;
+
+        _backgroundMusicSource.loop = true;
+        _backgroundMusicSource.volume = 0.5f;
+        PlayBackgroundMusic(); // start playing
     }
 
     public static void PlayDropChip() {
         Debug.Log("Drop chip sound: " + _dropChipSound);
-        if (_audioSource.clip != _dropChipSound) {
-            _audioSource.clip = _dropChipSound;
+        if (_soundEffectsSource.clip != _dropChipSound) {
+            _soundEffectsSource.clip = _dropChipSound;
         }
-        _audioSource.Play();
+        _soundEffectsSource.Play();
     }
 
     public static void PlayPressButton() {
-        if (_audioSource.clip != _pressButtonSound)
+        if (_soundEffectsSource.clip != _pressButtonSound)
         {
-            _audioSource.clip = _pressButtonSound;
+            _soundEffectsSource.clip = _pressButtonSound;
         }
-        _audioSource.Play();
+        _soundEffectsSource.Play();
+    }
+
+    public static void PlayBackgroundMusic() {
+        if (_backgroundMusicSource.clip != _backgroundMusic) {
+            _backgroundMusicSource.clip = _backgroundMusic;
+        }
+
+        _backgroundMusicSource.Play();
     }
 }
