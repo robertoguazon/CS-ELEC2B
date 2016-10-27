@@ -15,6 +15,8 @@ public class Cell : MonoBehaviour {
 
     private SpriteRenderer _spriteRenderer;
 
+    private bool _checked;
+
     void Start () {
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -35,12 +37,17 @@ public class Cell : MonoBehaviour {
             Debug.Log("Color highlightColor: null");
         }
 
+        _checked = false;
+
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+    public bool isChecked() {
+        return _checked;
+    }
+
+    public void check() {
+        _checked = true;
+    }
 
     void OnMouseDown() {
         //access the method from parent

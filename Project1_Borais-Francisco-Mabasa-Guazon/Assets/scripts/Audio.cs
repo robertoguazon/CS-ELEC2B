@@ -10,6 +10,9 @@ public class Audio : MonoBehaviour {
     [SerializeField]
     private AudioClip pressButtonSound;
     [SerializeField]
+    private float musicVolume = 0.1f;
+    [SerializeField]
+    private float soundVolume = 1.0f;
 
     private static AudioSource _soundEffectsSource;
     private static AudioSource _backgroundMusicSource;
@@ -19,6 +22,9 @@ public class Audio : MonoBehaviour {
     private static AudioClip _pressButtonSound;
 
     private static Audio _instance = null;
+
+    private static float _musicVolume;
+    private static float _soundVolume;
 
     void Awake() {
         if (_instance == null) {
@@ -45,8 +51,14 @@ public class Audio : MonoBehaviour {
         _pressButtonSound = pressButtonSound;
         _backgroundMusic = backgroundMusic;
 
+        //fields
+        _musicVolume = musicVolume;
+        _soundVolume = soundVolume;
+
+        _soundEffectsSource.volume = _soundVolume;
+
         _backgroundMusicSource.loop = true;
-        _backgroundMusicSource.volume = 0.5f;
+        _backgroundMusicSource.volume = _musicVolume;
         PlayBackgroundMusic(); // start playing
     }
 
@@ -70,7 +82,6 @@ public class Audio : MonoBehaviour {
         if (_backgroundMusicSource.clip != _backgroundMusic) {
             _backgroundMusicSource.clip = _backgroundMusic;
         }
-
         _backgroundMusicSource.Play();
     }
 }

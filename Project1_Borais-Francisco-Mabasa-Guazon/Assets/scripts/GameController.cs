@@ -257,6 +257,7 @@ public class GameController : MonoBehaviour {
 
         if (_available <= 0 || (_turn >= _startAdjacentTurn && !IsAvailable(_playerSprite)))
         {
+            //_gameController.StartCoroutine(FillSpaces(1.5f)); //TODO
             _gameController.StartCoroutine(CheckWinner(1.5f));
         }
     }

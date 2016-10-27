@@ -37,16 +37,22 @@ public class Checker : MonoBehaviour {
 
     //more efficient than CheckGrid()
     public void CheckPlacedCells(Grid grid, List<GameObject> placedCells) {
+ 
+        int orig = placedCells.Count;
         for (int i = 0; i < placedCells.Count; i++) {
             GameObject cellObject = placedCells[i];
             Cell cell = cellObject.GetComponent<Cell>();
-            Debug.Log("Checking cell at (row,col): " + cell.Row + "," + cell.Col);
+            //Debug.Log("Checking cell at (row,col): " + cell.Row + "," + cell.Col);
             Sprite chipSprite = cell.GetChipSprite();
 
-            if (CheckCell(grid,cell)) {
-                if (chipSprite == spriteRedChip) _playerRed++;
-                else if (chipSprite == spriteBlueChip) _playerBlue++;
+            if (!cell.isChecked()) {
+                if (CheckCell(grid, cell))
+                {
+                    if (chipSprite == spriteRedChip) _playerRed++;
+                    else if (chipSprite == spriteBlueChip) _playerBlue++;
+                }
             }
+           
         }
     }
 
@@ -54,6 +60,9 @@ public class Checker : MonoBehaviour {
     public bool CheckCell(Grid grid, Cell cell) {
         _currentChipSprite = cell.GetChipSprite();
         List<Vector3> vertices = new List<Vector3>();
+        List<Cell> cellsToCheck = new List<Cell>(); // new implementation of checking
+
+        cellsToCheck.Add(cell);
 
         for (int checkerRow = 0; (checkerRow < checkerRows.Length); checkerRow++)
         {
@@ -63,16 +72,21 @@ public class Checker : MonoBehaviour {
             {
 
                 if ((checkerCol + cell.Col) >= grid.GetCols()) return false;
-                Debug.Log("checker row,col (: " + checkerRow + ", " + checkerCol + ")");
+                // Debug.Log("checker row,col (: " + checkerRow + ", " + checkerCol + ")");
 
-                Debug.Log("Final(" + (cell.Row + checkerRow) + ", " + (cell.Col + checkerCol) + ")");
+
+                GameObject cellObject = grid.GetCellAt(cell.Row + checkerRow, cell.Col + checkerCol);
+                Cell checkCell = cellObject.GetComponent<Cell>();
+                if (checkCell.isChecked()) return false;
+
+                // Debug.Log("Final(" + (cell.Row + checkerRow) + ", " + (cell.Col + checkerCol) + ")");
                 if (_currentChipSprite != grid.GetChipSpriteAt(checkerRow + cell.Row, checkerCol + cell.Col))
                 {
                     return false;
                 }
 
-                vertices.Add(grid.GetCellAt(cell.Row + checkerRow, cell.Col + checkerCol).transform.position);
-
+                vertices.Add(cellObject.transform.position);
+                cellsToCheck.Add(checkCell);
             }
         }
 
@@ -92,6 +106,10 @@ public class Checker : MonoBehaviour {
             DrawLine(vertices[i], vertices[(i + 1) % vertices.Count], color);
         }
 
+        foreach (Cell cellToCheck in cellsToCheck) {
+            cellToCheck.check();
+        }
+
         return true;
     }
 
@@ -109,16 +127,15 @@ public class Checker : MonoBehaviour {
             {
 
                 if ((checkerCol + col) >= grid.GetCols()) return false;
-                Debug.Log("checker row,col (: " + checkerRow + ", " + checkerCol + ")");
+                //Debug.Log("checker row,col (: " + checkerRow + ", " + checkerCol + ")");
 
-                Debug.Log("Final(" + (row + checkerRow) + ", " + (col + checkerCol) + ")");
+                //Debug.Log("Final(" + (row + checkerRow) + ", " + (col + checkerCol) + ")");
                 if (_currentChipSprite != grid.GetChipSpriteAt(checkerRow + row, checkerCol + col))
                 {
                     return false;
                 }
 
                 vertices.Add(grid.GetCellAt(row + checkerRow, col + checkerCol).transform.position);
-
             }
         }
 
@@ -186,9 +203,9 @@ public class Checker : MonoBehaviour {
 
         Debug.Log("grid rows,cols (" + _gridRows + ", " + _gridCols);
 
-        for (int row = 0; row < _gridRows; row++)
+        for (int row = 0; row < _gridRows; row++ /*row += checkerRows.Length*/)
         {
-            for (int col = 0; col < _gridCols; col++)
+            for (int col = 0; col < _gridCols; col++ /*col += checkerRows[row]*/)
             {
 
                 Debug.Log("row, col(" + row + ", " + col + ")");
