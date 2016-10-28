@@ -185,11 +185,11 @@ public class GameController : MonoBehaviour {
     {
 
         if (HasChip(cell)) return; // exit if the cell already has chip
-        Debug.Log("No chip");
+        //Debug.Log("No chip");
         if (_turn >= _startAdjacentTurn) {
-            Debug.Log("Check adjacent");
+            //Debug.Log("Check adjacent");
             if (!HasAdjacent(cell,_playerSprite)) return; // check if has adjacent then be able to place chip
-            Debug.Log("Has adjacent");
+            //Debug.Log("Has adjacent");
         }
 
         _turn++; //add turn after placing chip
@@ -206,14 +206,14 @@ public class GameController : MonoBehaviour {
 
         newChip.GetComponent<SpriteRenderer>().sortingLayerName = "Floating Chip";
         newChip.transform.position = new Vector3(cell.transform.position.x, cell.transform.position.y, cell.transform.position.z - 1);
-        newChip.transform.parent = cell.transform;
+        newChip.transform.SetParent(cell.transform);
         newChip.transform.localScale = new Vector3(1f, 1f, 1f);
 
         //-1 available cell
         _available--;
-        ComputeAvailableCells(newChip.transform.parent.gameObject);
-        Debug.Log("Available cells: " + _availableCells.Count);
-        Debug.Log(_available);
+        ComputeAvailableCells(cell);
+        //Debug.Log("Available cells: " + _availableCells.Count);
+        //Debug.Log(_available);
 
         //change turns
         ChangeTurn();
@@ -237,10 +237,10 @@ public class GameController : MonoBehaviour {
     }
 
     public static void ComputeAvailableCells(GameObject cell) {
-        
-        for (int i = 0; i < _availableCells.Count; i++) {
-            _availableCells.Remove(cell);
-        }
+
+        _availableCells.Remove(cell);
+
+        Debug.Log("_availableCells: " + _availableCells.Count);
     }
 
     private static void ChangeTurn()
@@ -257,10 +257,50 @@ public class GameController : MonoBehaviour {
 
         if (_available <= 0 || (_turn >= _startAdjacentTurn && !IsAvailable(_playerSprite)))
         {
-            //_gameController.StartCoroutine(FillSpaces(1.5f)); //TODO
+            if (_available > 0) {
+                _gameController.StartCoroutine(FillSpaces(1f)); //TODO
+            }
             _gameController.StartCoroutine(CheckWinner(1.5f));
         }
+
+        Debug.Log("Last turn: " + (_playerRed ? "Red" : "Blue"));
     }
+
+    private static IEnumerator FillSpaces(float delay) {
+
+        yield return new WaitForSeconds(delay);
+
+        GameObject gameObjectChip;
+        if (!_playerRed) //last wins
+        {
+            gameObjectChip = _redChip;
+        }
+        else
+        {
+            gameObjectChip = _blueChip;
+        }
+
+
+        foreach (GameObject cellGameObject in _availableCells) {
+            GameObject chip = Instantiate(gameObjectChip) as GameObject;
+            FillChip(cellGameObject,chip);
+        }
+        Audio.PlayDropChip();
+        _availableCells.Clear(); //clear all cells
+    }
+
+    private static void FillChip(GameObject cell, GameObject chip) {
+
+
+        chip.GetComponent<SpriteRenderer>().sortingLayerName = "Floating Chip";
+        chip.transform.position = new Vector3(cell.transform.position.x, cell.transform.position.y, cell.transform.position.z - 1);
+        chip.transform.SetParent(cell.transform);
+        chip.transform.localScale = new Vector3(1f, 1f, 1f);
+
+        _available--;
+        _placedCells.Add(cell);
+    }
+
 
     private static IEnumerator CheckWinner(float seconds) {
         _canvas.enabled = true;
