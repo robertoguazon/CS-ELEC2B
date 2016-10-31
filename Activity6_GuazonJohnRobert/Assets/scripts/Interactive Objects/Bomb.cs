@@ -18,13 +18,24 @@ public class Bomb : MonoBehaviour, ButtonParent {
     private int bombPower = 10;
     [SerializeField]
     private LayerMask affectedByBomb;
+    [SerializeField]
+    private AudioClip explosionSound;
+    [Range(0.0f, 1.0f)]
+    [SerializeField]
+    private float explosionVolume = 0.5f;
 
+
+    private AudioSource _audioSource;
     private bool pressed = false;
 
     private List<Collider2D> _colliders;
 
     void Start() {
         _colliders = new List<Collider2D>();
+        _audioSource = gameObject.AddComponent<AudioSource>();
+
+        _audioSource.clip = explosionSound;
+        _audioSource.volume = explosionVolume;
     }
 
     public void Press() {
@@ -33,6 +44,10 @@ public class Bomb : MonoBehaviour, ButtonParent {
             bombAnimator.SetTrigger("PressBomb");
             StartCoroutine(AnimateBomb());
         }
+    }
+
+    public void PlayExplosionSound() {
+        _audioSource.Play();
     }
 
     private IEnumerator AnimateBomb() {
@@ -55,6 +70,7 @@ public class Bomb : MonoBehaviour, ButtonParent {
         GetComponent<Collider2D>().enabled = false;
         enabled = false;
         //explode the bomb after delay
+        PlayExplosionSound();
         bombAnimator.SetTrigger("ExplodeBomb");
 
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, bombRadius, affectedByBomb, -1,2);

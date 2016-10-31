@@ -90,25 +90,29 @@ public class Checker : MonoBehaviour {
             }
         }
 
-        Color color = Color.black;
+     
+          Color color = Color.black;
 
-        if (cell.GetChipSprite() == spriteRedChip)
-        {
-            color = new Color(1f, 0.3f, 0.3f);
-        }
-        else if (cell.GetChipSprite() == spriteBlueChip)
-        {
-            color = new Color(0.3f, 0.3f, 1f);
-        }
+          if (cell.GetChipSprite() == spriteRedChip)
+          {
+              color = new Color(1f, 0.3f, 0.3f);
+          }
+          else if (cell.GetChipSprite() == spriteBlueChip)
+          {
+              color = new Color(0.3f, 0.3f, 1f);
+          }
 
-        for (int i = 0; i < vertices.Count; i++)
-        {
-            DrawLine(vertices[i], vertices[(i + 1) % vertices.Count], color);
-        }
+          for (int i = 0; i < vertices.Count; i++)
+          {
+              DrawLine(vertices[i], vertices[(i + 1) % vertices.Count], color);
+          }
 
+
+        //checking important
         foreach (Cell cellToCheck in cellsToCheck) {
-            cellToCheck.check();
-        }
+              cellToCheck.check();
+          }
+         
 
         return true;
     }
@@ -187,7 +191,7 @@ public class Checker : MonoBehaviour {
         myLine.AddComponent<LineRenderer>();
         myLine.GetComponent<LineRenderer>().sortingLayerName = "Checking";
         LineRenderer lr = myLine.GetComponent<LineRenderer>();
-        lr.material = new Material(Shader.Find("Particles/Additive"));
+        lr.material = new Material(Shader.Find("Particles/Additive")); //INCLUDE THIS IN UNITY SHADERS ALWAYS TODO
         lr.SetColors(color, color);
         lr.SetWidth(0.1f, 0.1f);
         lr.SetPosition(0, start);

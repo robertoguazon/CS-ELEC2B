@@ -8,7 +8,9 @@ public class Audio : MonoBehaviour {
     [SerializeField]
     private AudioClip dropChipSound;
     [SerializeField]
-    private AudioClip pressButtonSound;
+    private AudioClip pressMenuButtonSound;
+    [SerializeField]
+    private AudioClip pressGameButtonSound;
     [SerializeField]
     private float musicVolume = 0.1f;
     [SerializeField]
@@ -19,7 +21,8 @@ public class Audio : MonoBehaviour {
 
     private static AudioClip _backgroundMusic;
     private static AudioClip _dropChipSound;
-    private static AudioClip _pressButtonSound;
+    private static AudioClip _pressMenuButtonSound;
+    private static AudioClip _pressGameButtonSound;
 
     private static Audio _instance = null;
 
@@ -48,8 +51,9 @@ public class Audio : MonoBehaviour {
         Debug.Log("Audio Source: " + _soundEffectsSource);
 
         _dropChipSound = dropChipSound;
-        _pressButtonSound = pressButtonSound;
+        _pressMenuButtonSound = pressMenuButtonSound;
         _backgroundMusic = backgroundMusic;
+        _pressGameButtonSound = pressGameButtonSound;
 
         //fields
         _musicVolume = musicVolume;
@@ -70,10 +74,10 @@ public class Audio : MonoBehaviour {
         _soundEffectsSource.Play();
     }
 
-    public static void PlayPressButton() {
-        if (_soundEffectsSource.clip != _pressButtonSound)
+    public static void PlayPressMenuButton() {
+        if (_soundEffectsSource.clip != _pressMenuButtonSound)
         {
-            _soundEffectsSource.clip = _pressButtonSound;
+            _soundEffectsSource.clip = _pressMenuButtonSound;
         }
         _soundEffectsSource.Play();
     }
@@ -83,5 +87,13 @@ public class Audio : MonoBehaviour {
             _backgroundMusicSource.clip = _backgroundMusic;
         }
         _backgroundMusicSource.Play();
+    }
+
+    public static void PlayPressGameButton() {
+        if (_soundEffectsSource.clip != _pressGameButtonSound)
+        {
+            _soundEffectsSource.clip = _pressGameButtonSound;
+        }
+        _soundEffectsSource.Play();
     }
 }

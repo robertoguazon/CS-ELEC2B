@@ -183,7 +183,8 @@ public class GameController : MonoBehaviour {
 
     public static void PlaceChip(GameObject cell)
     {
-
+        
+        
         if (HasChip(cell)) return; // exit if the cell already has chip
         //Debug.Log("No chip");
         if (_turn >= _startAdjacentTurn) {
@@ -337,5 +338,9 @@ public class GameController : MonoBehaviour {
 
     public static string GetGameLevel() {
         return SceneManager.GetActiveScene().name;
+    }
+
+    public static bool IsPlayerRed() {
+        return _playerRed;
     }
 }
