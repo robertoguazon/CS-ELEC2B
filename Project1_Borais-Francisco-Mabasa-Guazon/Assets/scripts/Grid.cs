@@ -27,8 +27,8 @@ public class Grid : MonoBehaviour {
     private Vector2 _scaleShould = new Vector2(1,1);
     private float _cellScreenOffset = 0f;
 
-    private static float _worldHeight = Camera.main.orthographicSize * 2.0f;
-    private static float _worldWidth = _worldHeight * Screen.width / Screen.height;
+    private static float _worldHeight;
+    private static float _worldWidth;
     //END OF EXPERIMENTAL
 
 
@@ -45,6 +45,9 @@ public class Grid : MonoBehaviour {
 
             //EXPERIMENTAL
             //get the supposed to be height and width to fit screen
+            _worldHeight = Camera.main.orthographicSize * 2.0f;
+            _worldWidth = _worldHeight * Screen.width / Screen.height;
+
             float size = (_worldHeight > _worldWidth) 
                 ? ((_worldWidth + _cellScreenOffset) / cols) 
                 : ((_worldHeight + _cellScreenOffset) / rows);
