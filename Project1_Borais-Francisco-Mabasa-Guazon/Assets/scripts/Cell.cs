@@ -7,6 +7,8 @@ public class Cell : MonoBehaviour {
     private Sprite blankSprite;
     [SerializeField]
     private Color blankColor;
+    [SerializeField]
+    private Vector3 hoverScaleAdd = new Vector3(0.5f,0.5f,0.5f); //EXPERIMENTAL
 
     [SerializeField]
     private Color highlightRedColor = new Color(0.9f, 0.5f, 0.5f, 1);
@@ -56,10 +58,17 @@ public class Cell : MonoBehaviour {
     }
 
     void OnMouseEnter() {
-       
 
-        transform.localScale = new Vector3(1.3f,1.3f,1.3f);
+       // transform.localScale = new Vector3(1.3f,1.3f,1.3f); //EXPERIMENTAL - comment out
         _spriteRenderer.sortingLayerName = "Floating Cell";
+
+        //EXPERIMENTAL
+        transform.localScale = new Vector3(
+            transform.localScale.x + hoverScaleAdd.x,
+            transform.localScale.y + hoverScaleAdd.y,
+            transform.localScale.z + hoverScaleAdd.z);
+        //END OF EXPERIMENTAL
+
         if (this.transform.childCount > 0){
             this.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = "Floating Chip";
         }
@@ -72,7 +81,15 @@ public class Cell : MonoBehaviour {
     }
 
     void OnMouseExit() {
-        transform.localScale = new Vector3(1f,1f,1f);
+        //transform.localScale = new Vector3(1f,1f,1f); //EXPERIMENTAL - comment out
+
+        //EXPERIMENTAL
+        transform.localScale = new Vector3(
+            transform.localScale.x - hoverScaleAdd.x,
+            transform.localScale.y - hoverScaleAdd.y,
+            transform.localScale.z - hoverScaleAdd.z);
+        //END OF EXPERIMENTAL
+
         _spriteRenderer.sortingLayerName = "Cell";
         if (this.transform.childCount > 0) {
             this.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerName = "Chip";

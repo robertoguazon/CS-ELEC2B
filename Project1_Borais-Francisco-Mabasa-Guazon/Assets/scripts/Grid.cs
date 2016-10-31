@@ -9,8 +9,7 @@ public class Grid : MonoBehaviour {
     [SerializeField] private float offsetY = 0;
 
     private SpriteRenderer _cellSpriteRenderer;
-    private float _cellWidth;
-    private float _cellHeight;
+    private Vector3 _cellSize;
 
 
     public int x = 0;
@@ -22,6 +21,17 @@ public class Grid : MonoBehaviour {
     private float _gridWidth;
     private float _gridHeight;
 
+    //EXPERIMENTAL
+    //experimental fitting grid to screen
+    private Vector2 _cellSizeShould;
+    private Vector2 _scaleShould = new Vector2(1,1);
+    private float _cellScreenOffset = 0f;
+
+    private static float _worldHeight = Camera.main.orthographicSize * 2.0f;
+    private static float _worldWidth = _worldHeight * Screen.width / Screen.height;
+    //END OF EXPERIMENTAL
+
+
     void Awake() {
         if (cell == null)
         {
@@ -30,14 +40,33 @@ public class Grid : MonoBehaviour {
         else
         {
             _cellSpriteRenderer = cell.GetComponent<SpriteRenderer>();
-            _cellWidth = _cellSpriteRenderer.sprite.bounds.size.x;
-            _cellHeight = _cellSpriteRenderer.sprite.bounds.size.y;
+            _cellSize = _cellSpriteRenderer.sprite.bounds.size;
+
+
+            //EXPERIMENTAL
+            //get the supposed to be height and width to fit screen
+            float size = (_worldHeight > _worldWidth) 
+                ? ((_worldWidth + _cellScreenOffset) / cols) 
+                : ((_worldHeight + _cellScreenOffset) / rows);
+
+            _cellSizeShould = new Vector3(size,size); //should be same
+
+            _scaleShould.x = _cellSizeShould.x / _cellSize.x;
+            _scaleShould.y = _cellSizeShould.y / _cellSize.y;
+            Debug.Log("world width: " + _worldWidth);
+            Debug.Log("world height: " + _worldHeight);
+            Debug.Log("Cell size: " + _cellSize);
+            Debug.Log("Cell size should: " + _cellSizeShould);    
+            Debug.Log("scaleX: " + _scaleShould.x);
+            Debug.Log("scaleY: " + _scaleShould.y);
+            //END OF EXPERIMENTAL
+         
 
             _cells = new GameObject[rows, cols];
 
-            _gridWidth = cols * _cellWidth + offsetX;
-            _gridHeight = rows * _cellHeight + offsetY;
-            Debug.Log("cell width: " + _cellWidth + ", cell height: " + _cellHeight);
+            _gridWidth = cols * _cellSizeShould.x + offsetX;
+            _gridHeight = rows * _cellSizeShould.y + offsetY;
+            Debug.Log("cell width: " + _cellSize.x + ", cell height: " + _cellSize.y);
         }
 
         for (int row = 0; row < rows; row++)
@@ -46,9 +75,19 @@ public class Grid : MonoBehaviour {
             {
                 GameObject newCell = Instantiate(cell) as GameObject;
                 _cells[row, col] = newCell;
+
+                
+                //EXPERIMENTAL
+                newCell.transform.localScale = new Vector3(_scaleShould.x, _scaleShould.y, 1);
+                _cellSize.x = _cellSizeShould.x;
+                _cellSize.y = _cellSizeShould.y;
+                //END OF EXPERIMENTAL
+               
+
+
                 newCell.transform.parent = this.transform;
-                float x = col * _cellWidth + offsetX;
-                float y = row * _cellHeight + offsetY;
+                float x = col * _cellSize.x + offsetX;
+                float y = row * _cellSize.y + offsetY;
                 newCell.transform.position = new Vector3(x, y, 0);
                 Debug.Log("x: " + x + ", y: " + y);
 
@@ -58,13 +97,29 @@ public class Grid : MonoBehaviour {
 
             }
         }
-
+        /* EXPERIMENTAL - comment out
         //fix grid position to center
-        this.transform.position = new Vector3(this.transform.position.x - _gridWidth / 2 + _cellWidth / 2, -_gridHeight / 2 + _cellHeight / 2);
+        this.transform.position = new Vector3(
+            this.transform.position.x - _gridWidth / 2 + _cellSize.x / 2,
+            -_worldHeight / 2 + _gridHeight / 2);
+        */
+
+        //EXPERIMENTAL
+        Debug.Log("Grid width: " + _gridWidth);
+        Debug.Log("Grid position before centering: " + this.transform.position);
+
+        this.transform.position = new Vector3(
+            transform.position.x - _gridWidth / 2 + _cellSizeShould.x / 2,
+            transform.position.y - _gridHeight / 2 + _cellSizeShould.y / 2);
+
+
+        Debug.Log("Grid position after centering: " + this.transform.position);
+        //END OF EXPERIMENTAL
+
     }
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         
     }
 
