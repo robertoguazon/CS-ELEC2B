@@ -19,6 +19,8 @@ public class GameController : MonoBehaviour {
     private GameObject triangleChecker;
     [SerializeField]
     private GameObject prefabLoading;
+    [SerializeField]
+    private GameObject backgroundGame;
 
     //ui s
     [SerializeField]
@@ -37,6 +39,8 @@ public class GameController : MonoBehaviour {
     private Animator scoreboardAnimator;
     [SerializeField]
     private Animator resetButtonAnimator;
+    [SerializeField]
+    private Animator goBackButtonAnimator;
 
     private static GameObject _redChip;
     private static GameObject _blueChip;
@@ -62,6 +66,8 @@ public class GameController : MonoBehaviour {
 
     //reset button
     private static Animator _resetButtonAnimator;
+    //goBack button
+    private static Animator _goBackButtonAnimator;
 
 
     //checkers
@@ -113,6 +119,7 @@ public class GameController : MonoBehaviour {
 
         _scoreboardAnimator = scoreboardAnimator;
         _resetButtonAnimator = resetButtonAnimator;
+        _goBackButtonAnimator = goBackButtonAnimator;
 
         _canvas.enabled = false;
 
@@ -133,6 +140,8 @@ public class GameController : MonoBehaviour {
         }
 
         _placedCells = new List<GameObject>();
+
+        setBackgroundGame();
     }
 
     void Awake() {
@@ -148,6 +157,16 @@ public class GameController : MonoBehaviour {
         }
 
         return false;
+    }
+
+    private void setBackgroundGame() {
+        //fits the background to screen size
+        Vector2 size = backgroundGame.GetComponent<SpriteRenderer>().sprite.bounds.size;
+        float scaleX = Grid.getWorldWidth() / size.x;
+        float scaleY = Grid.getWorldHeight() / size.y;
+        backgroundGame.transform.localScale = new Vector3(scaleX,scaleY, transform.localScale.z);
+        backgroundGame.transform.position = new Vector2(0,0); //set to center
+        
     }
 
     private static bool HasAdjacent(GameObject cell, Sprite cellSprite) {
@@ -307,6 +326,7 @@ public class GameController : MonoBehaviour {
         _canvas.enabled = true;
         _scoreboardAnimator.SetTrigger("Appear");
         _resetButtonAnimator.SetTrigger("Appear");
+        _goBackButtonAnimator.SetTrigger("Appear");
 
         //start checking animation
         _loading.SetActive(true);

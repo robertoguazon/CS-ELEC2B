@@ -16,5 +16,8 @@ public class ButtonController : MonoBehaviour {
         Application.Quit();
     }
 
+    public void GoBackMenu() {
+        SceneManager.LoadScene("Menu");
+    }
 
 }

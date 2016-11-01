@@ -29,6 +29,14 @@ public class Grid : MonoBehaviour {
 
     private static float _worldHeight;
     private static float _worldWidth;
+
+    public static float getWorldWidth() {
+        return _worldWidth;
+    }
+
+    public static float getWorldHeight() {
+        return _worldHeight;
+    }
     //END OF EXPERIMENTAL
 
 
@@ -81,7 +89,7 @@ public class Grid : MonoBehaviour {
 
                 
                 //EXPERIMENTAL
-                newCell.transform.localScale = new Vector3(_scaleShould.x, _scaleShould.y, 1);
+                newCell.transform.localScale = new Vector3(_scaleShould.x, _scaleShould.y, transform.localScale.z);
                 _cellSize.x = _cellSizeShould.x;
                 _cellSize.y = _cellSizeShould.y;
                 //END OF EXPERIMENTAL
