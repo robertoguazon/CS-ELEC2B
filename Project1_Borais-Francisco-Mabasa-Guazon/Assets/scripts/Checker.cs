@@ -12,6 +12,11 @@ public class Checker : MonoBehaviour {
     [SerializeField]
     private int[] checkerRows;
 
+    //EXPERIMENTAL
+    [SerializeField]
+    private bool reverse = false;
+    //END OF EXPERIMENTAL
+
     private Sprite _currentChipSprite;
 
     private int _currentRow;
@@ -39,6 +44,7 @@ public class Checker : MonoBehaviour {
     public void CheckPlacedCells(Grid grid, List<GameObject> placedCells) {
  
         int orig = placedCells.Count;
+
         for (int i = 0; i < placedCells.Count; i++) {
             GameObject cellObject = placedCells[i];
             Cell cell = cellObject.GetComponent<Cell>();
@@ -68,25 +74,49 @@ public class Checker : MonoBehaviour {
         {
 
             if ((checkerRow + cell.Row) >= grid.GetRows()) return false;
-            for (int checkerCol = 0; (checkerCol < checkerRows[checkerRow]); checkerCol++)
-            {
-
-                if ((checkerCol + cell.Col) >= grid.GetCols()) return false;
-                // Debug.Log("checker row,col (: " + checkerRow + ", " + checkerCol + ")");
-
-
-                GameObject cellObject = grid.GetCellAt(cell.Row + checkerRow, cell.Col + checkerCol);
-                Cell checkCell = cellObject.GetComponent<Cell>();
-                if (checkCell.isChecked()) return false;
-
-                // Debug.Log("Final(" + (cell.Row + checkerRow) + ", " + (cell.Col + checkerCol) + ")");
-                if (_currentChipSprite != grid.GetChipSpriteAt(checkerRow + cell.Row, checkerCol + cell.Col))
+           
+            if (reverse) {
+                for (int checkerCol = checkerRows[checkerRow] - 1; (checkerCol >= 0); checkerCol--)
                 {
-                    return false;
-                }
 
-                vertices.Add(cellObject.transform.position);
-                cellsToCheck.Add(checkCell);
+                    if ((cell.Col - checkerCol) < 0) return false;
+                    // Debug.Log("checker row,col (: " + checkerRow + ", " + checkerCol + ")");
+
+
+                    GameObject cellObject = grid.GetCellAt(cell.Row + checkerRow, cell.Col - checkerCol);
+                    Cell checkCell = cellObject.GetComponent<Cell>();
+                    if (checkCell.isChecked()) return false;
+
+                    // Debug.Log("Final(" + (cell.Row + checkerRow) + ", " + (cell.Col + checkerCol) + ")");
+                    if (_currentChipSprite != grid.GetChipSpriteAt(cell.Row + checkerRow, cell.Col - checkerCol))
+                    {
+                        return false;
+                    }
+
+                    vertices.Add(cellObject.transform.position);
+                    cellsToCheck.Add(checkCell);
+                }
+            } else {
+                for (int checkerCol = 0; (checkerCol < checkerRows[checkerRow]); checkerCol++)
+                {
+
+                    if ((checkerCol + cell.Col) >= grid.GetCols()) return false;
+                    // Debug.Log("checker row,col (: " + checkerRow + ", " + checkerCol + ")");
+
+
+                    GameObject cellObject = grid.GetCellAt(cell.Row + checkerRow, cell.Col + checkerCol);
+                    Cell checkCell = cellObject.GetComponent<Cell>();
+                    if (checkCell.isChecked()) return false;
+
+                    // Debug.Log("Final(" + (cell.Row + checkerRow) + ", " + (cell.Col + checkerCol) + ")");
+                    if (_currentChipSprite != grid.GetChipSpriteAt(checkerRow + cell.Row, checkerCol + cell.Col))
+                    {
+                        return false;
+                    }
+
+                    vertices.Add(cellObject.transform.position);
+                    cellsToCheck.Add(checkCell);
+                }
             }
         }
 
