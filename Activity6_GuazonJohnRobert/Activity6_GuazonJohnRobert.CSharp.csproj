@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\scripts\AudioController.cs" />
     <Compile Include="Assets\scripts\CharacterController2D.cs" />
     <Compile Include="Assets\scripts\Coin.cs" />
     <Compile Include="Assets\scripts\Collide.cs" />
@@ -70,10 +71,15 @@
     <Compile Include="Assets\scripts\Enemy.cs" />
     <Compile Include="Assets\scripts\EnemyStun.cs" />
     <Compile Include="Assets\scripts\GameManager.cs" />
+    <Compile Include="Assets\scripts\GlobalScripts.cs" />
     <Compile Include="Assets\scripts\Interactive Objects\Bomb.cs" />
     <Compile Include="Assets\scripts\Interactive Objects\ButtonDetector.cs" />
     <Compile Include="Assets\scripts\Interactive Objects\ButtonParent.cs" />
+    <Compile Include="Assets\scripts\MainMenuManager.cs" />
+    <Compile Include="Assets\scripts\MenuButtonLoadLevel.cs" />
+    <Compile Include="Assets\scripts\MenuPauseAndLoadLevel.cs" />
     <Compile Include="Assets\scripts\MoveTranslate.cs" />
+    <Compile Include="Assets\scripts\OnStartGame.cs" />
     <Compile Include="Assets\scripts\PlatformMover.cs" />
     <Compile Include="Assets\scripts\PlayerPrefManager.cs" />
     <Compile Include="Assets\scripts\TimedObjectDestructor.cs" />
