@@ -14,9 +14,9 @@ public class GameController : MonoBehaviour {
     [SerializeField]
     private GameObject prefabGrid;
     [SerializeField]
-    private GameObject rectangleChecker;
+    private GameObject[] rectangleCheckers;
     [SerializeField]
-    private GameObject triangleChecker;
+    private GameObject[] triangleCheckers;
     [SerializeField]
     private GameObject prefabLoading;
     [SerializeField]
@@ -71,8 +71,8 @@ public class GameController : MonoBehaviour {
 
 
     //checkers
-    private static Checker _rectangleChecker;
-    private static Checker _triangleChecker;
+    private static Checker[] _rectangleCheckers;
+    private static Checker[] _triangleCheckers;
 
     //sprites
     private static Sprite _redSprite;
@@ -103,8 +103,16 @@ public class GameController : MonoBehaviour {
         _gameController = this;
 
         //sample
-        _rectangleChecker = rectangleChecker.GetComponent<Checker>();
-        _triangleChecker = triangleChecker.GetComponent<Checker>();
+        _rectangleCheckers = new Checker[rectangleCheckers.Length];
+        for (int i = 0; i < _rectangleCheckers.Length; i++) {
+            _rectangleCheckers[i] = rectangleCheckers[i].GetComponent<Checker>();
+        }
+
+
+        _triangleCheckers = new Checker[triangleCheckers.Length];
+        for (int i = 0; i < _triangleCheckers.Length; i++) {
+            _triangleCheckers[i] = triangleCheckers[i].GetComponent<Checker>();
+        }
 
         _loading = Instantiate(prefabLoading) as GameObject;
         _loading.SetActive(false);
@@ -332,21 +340,40 @@ public class GameController : MonoBehaviour {
         _loading.SetActive(true);
         yield return new WaitForSeconds(seconds);
 
-        //check using checker
-        _rectangleChecker.CheckPlacedCells(_gridScript, _placedCells);
+        //check using checker  
+        for (int i = 0; i < _rectangleCheckers.Length; i++) {
+            _rectangleCheckers[i].CheckPlacedCells(_gridScript, _placedCells);
+        }
 
-        float rectangleRed = _rectangleChecker.GetRedScore();
-        float rectangleBlue = _rectangleChecker.GetBlueScore();
+        int rectangleRedScores = 0;
+        int rectangleBlueScores = 0;
+
+        for (int i = 0; i < _rectangleCheckers.Length; i++) {
+            rectangleRedScores += _rectangleCheckers[i].GetRedScore();
+            rectangleBlueScores += _rectangleCheckers[i].GetBlueScore();
+        }
 
         //place texts
-        _redRectangleText.text = "" + rectangleRed;
-        _blueRectangleText.text = "" + rectangleBlue;
+        _redRectangleText.text = "" + rectangleRedScores;
+        _blueRectangleText.text = "" + rectangleBlueScores;
 
         //if tie calculate triangle
-        if (rectangleBlue == rectangleRed) {
-            _triangleChecker.CheckPlacedCells(_gridScript, _placedCells);
-            _redTriangleText.text = "" + _triangleChecker.GetRedScore();
-            _blueTriangleText.text = "" + _triangleChecker.GetBlueScore();
+        if (rectangleRedScores == rectangleBlueScores) {
+
+            for (int i = 0; i < _triangleCheckers.Length; i++) {
+                _triangleCheckers[i].CheckPlacedCells(_gridScript, _placedCells);
+            }
+
+            int redTrianglesScore = 0;
+            int blueTrianglesScore = 0;
+
+            for (int i = 0; i < _triangleCheckers.Length; i++) {
+                redTrianglesScore += _triangleCheckers[i].GetRedScore();
+                blueTrianglesScore += _triangleCheckers[i].GetBlueScore();
+            }
+
+            _redTriangleText.text = "" + redTrianglesScore;
+            _blueTriangleText.text = "" + blueTrianglesScore;
         } else {
             _redTriangleText.text = "?";
             _blueTriangleText.text = "?";

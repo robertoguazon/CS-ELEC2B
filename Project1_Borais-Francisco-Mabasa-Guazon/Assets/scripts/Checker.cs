@@ -45,6 +45,7 @@ public class Checker : MonoBehaviour {
  
         int orig = placedCells.Count;
 
+        /*
         for (int i = 0; i < placedCells.Count; i++) {
             GameObject cellObject = placedCells[i];
             Cell cell = cellObject.GetComponent<Cell>();
@@ -59,6 +60,24 @@ public class Checker : MonoBehaviour {
                 }
             }
            
+        }
+        */
+
+        for (int row = 0; row < grid.GetRows(); row++) {
+            for (int col = 0; col < grid.GetCols(); col++) {
+                GameObject cellObject = grid.GetCellAt(row, col);
+                Cell cell = cellObject.GetComponent<Cell>();
+                Sprite chipSprite = cell.GetChipSprite();
+
+                if (!cell.isChecked())
+                {
+                    if (CheckCell(grid, cell))
+                    {
+                        if (chipSprite == spriteRedChip) _playerRed++;
+                        else if (chipSprite == spriteBlueChip) _playerBlue++;
+                    }
+                }
+            }
         }
     }
 
