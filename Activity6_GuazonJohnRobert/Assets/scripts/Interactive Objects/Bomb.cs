@@ -23,6 +23,8 @@ public class Bomb : MonoBehaviour, ButtonParent {
     [Range(0.0f, 1.0f)]
     [SerializeField]
     private float explosionVolume = 0.5f;
+    [SerializeField]
+    private ParticleSystem explosion;
 
 
     private AudioSource _audioSource;
@@ -85,6 +87,8 @@ public class Bomb : MonoBehaviour, ButtonParent {
                 bomb.Press();
             }                                              
         }
+
+        Instantiate(explosion, transform.position, transform.rotation);
         
     }
 
