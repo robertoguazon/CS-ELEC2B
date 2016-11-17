@@ -82,4 +82,9 @@ public static class PlayerPrefManager {
 			}
 		}
 	}
+
+    public static void ResetPlayer(int startLives) {
+        PlayerPrefs.SetInt("Lives", startLives);
+        PlayerPrefs.SetInt("Score", 0);
+    }
 }

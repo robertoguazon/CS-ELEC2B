@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI; // include UI namespace so can reference UI elements
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -69,13 +68,12 @@ public class GameManager : MonoBehaviour {
 		if (levelAfterVictory=="") {
 			Debug.LogWarning("levelAfterVictory not specified, defaulted to current level");
 			levelAfterVictory = Application.loadedLevelName;
-        }
+		}
 		
 		if (levelAfterGameOver=="") {
 			Debug.LogWarning("levelAfterGameOver not specified, defaulted to current level");
 			levelAfterGameOver = Application.loadedLevelName;
-            
-        }
+		}
 
 		// friendly error messages
 		if (UIScore==null)
@@ -157,25 +155,8 @@ public class GameManager : MonoBehaviour {
 			PlayerPrefManager.SavePlayerState(score,highscore,lives);
 
 			// load the gameOver screen
-            switch (levelAfterGameOver)
-            {
-                case "Level1":
-                case "Level2":
-                case "Level3":
-                    AudioController.PlayMusicBackground();
-                    break;
-                case "LevelSelection":
-                    AudioController.PlayMusicMainMenu();
-                    break;
-                case "Lose":
-                    AudioController.PlayMusicGameLoose();
-                    break;
-                case "Win":
-                    AudioController.PlayMusicGameWin();
-                    break;
-            }
-            SceneManager.LoadScene(levelAfterGameOver);
-        } else { // tell the player to respawn
+			Application.LoadLevel (levelAfterGameOver);
+		} else { // tell the player to respawn
 			_player.GetComponent<CharacterController2D>().Respawn(_spawnLocation);
 		}
 	}
@@ -192,23 +173,6 @@ public class GameManager : MonoBehaviour {
 	// load the nextLevel after delay
 	IEnumerator LoadNextLevel() {
 		yield return new WaitForSeconds(3.5f); 
-        switch (levelAfterVictory)
-        {
-            case "Level1":
-            case "Level2":
-            case "Level3":
-                AudioController.PlayMusicBackground();
-                break;
-            case "LevelSelection":
-                AudioController.PlayMusicMainMenu();
-                break;
-            case "Lose":
-                AudioController.PlayMusicGameLoose();
-                break;
-            case "Win":
-                AudioController.PlayMusicGameWin();
-                break;
-        }
-        SceneManager.LoadScene(levelAfterVictory);
-    }
+		Application.LoadLevel (levelAfterVictory);
+	}
 }

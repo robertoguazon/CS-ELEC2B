@@ -270,9 +270,9 @@ public class CharacterController2D : MonoBehaviour {
 		FreezeMotion ();
 		_animator.SetTrigger("Victory");
 
-        if (GameManager.gm) // do the game manager level compete stuff, if it is available
-            GameManager.gm.LevelCompete();
-        else // otherwise, just reload the current level
+		if (GameManager.gm) // do the game manager level compete stuff, if it is available
+			GameManager.gm.LevelCompete();
+		else // otherwise, just reload the current level
 			Application.LoadLevel(Application.loadedLevelName);
 	}
 
